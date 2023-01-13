@@ -3,7 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
+// import axios from 'axios';
 
+// import * as request from '~/utils/request';
+import * as searchServices from '~/apiServices/searchServices';
+import { useDebounce } from '~/hooks';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import SearchAccountItem from '~/components/SearchAccountItem';
 import styles from './Search.module.scss';
@@ -14,14 +18,61 @@ function Search() {
    const [searchValue, setSearchValue] = useState('');
    const [searchResult, setSearchResult] = useState([]);
    const [showResult, setShowResult] = useState(true);
+   const [loading, setLoading] = useState(false);
+
+   const debounced = useDebounce(searchValue, 800);
 
    const inputRef = useRef();
 
    useEffect(() => {
-      setTimeout(() => {
-         setSearchResult([1, 2, 3, 4]);
-      }, 0);
-   }, []);
+      if (!debounced.trim()) {
+         setSearchResult([]);
+         return;
+      }
+
+      const fetchApi = async () => {
+         setLoading(true);
+
+         const result = await searchServices.search(debounced);
+         setSearchResult(result);
+
+         setLoading(false);
+      };
+      fetchApi();
+
+      // const fetchApi = async () => {
+      //    try {
+      //       const res = await request.get('users/search', {
+      //          params: {
+      //             q: debounced,
+      //             type: `less`,
+      //          },
+      //       });
+      //       setSearchResult(res.data);
+      //       setLoading(false);
+      //    } catch (error) {
+      //       setLoading(false);
+      //    }
+      // };
+      // fetchApi();
+
+      // ?q=${encodeURIComponent(debounced)}&type=less`
+      // request
+      //    .get('users/search', {
+      //       params: {
+      //          q: debounced,
+      //          type: `less`,
+      //       },
+      //    })
+      //    // .then((res) => res.json())
+      //    .then((res) => {
+      //       setSearchResult(res.data);
+      //       setLoading(false);
+      //    })
+      //    .catch(() => {
+      //       setLoading(false);
+      //    });
+   }, [debounced]);
 
    const handleHideResult = () => {
       setShowResult(false);
@@ -34,10 +85,9 @@ function Search() {
             <div className={cx('search-result')} tabIndex="-1" {...attrs}>
                <PopperWrapper>
                   <h4 className={cx('search-title')}>Accounts</h4>
-
-                  <SearchAccountItem />
-                  <SearchAccountItem />
-                  <SearchAccountItem />
+                  {searchResult.map((result) => (
+                     <SearchAccountItem key={result.id} data={result} />
+                  ))}
                </PopperWrapper>
             </div>
          )}
@@ -52,7 +102,7 @@ function Search() {
                onChange={(e) => setSearchValue(e.target.value)}
                onFocus={() => setShowResult(true)}
             />
-            {!!searchValue && (
+            {!!searchValue && !loading && (
                <button
                   className={cx('clear')}
                   onClick={() => {
@@ -64,7 +114,7 @@ function Search() {
                   <FontAwesomeIcon icon={faCircleXmark} />
                </button>
             )}
-            {/* <FontAwesomeIcon className={cx('loading')} icon={faSpinner} /> */}
+            {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
 
             <button className={cx('search-btn')}>
                <FontAwesomeIcon icon={faMagnifyingGlass} />
