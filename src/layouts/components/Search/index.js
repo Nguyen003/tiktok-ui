@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 // import axios from 'axios';
 
 // import * as request from '~/utils/request';
-import * as searchServices from '~/apiServices/searchServices';
+import * as searchServices from '~/services_api/searchService';
 import { useDebounce } from '~/hooks';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import SearchAccountItem from '~/components/SearchAccountItem';
