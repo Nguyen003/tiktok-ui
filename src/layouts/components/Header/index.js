@@ -9,6 +9,7 @@ import {
    faUser,
    faCoins,
    faSignOut,
+   faSignIn,
    faGear,
 } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
@@ -131,7 +132,8 @@ function Header() {
                      </Button>
                      <Button
                         primary
-                        /*leftIcon={<FontAwesomeIcon icon={faSignIn} />}*/ onClick={() => alert('khong vao duoc dau')}
+                        /*leftIcon={<FontAwesomeIcon icon={faSignIn} />}*/
+                        onClick={() => alert('khong vao duoc dau')}
                      >
                         Log In
                      </Button>
