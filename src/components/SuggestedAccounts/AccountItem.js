@@ -10,13 +10,13 @@ import AccountPreview from './AccountPreview/AccountPreview';
 
 const cx = classNames.bind(styles);
 
-function AccountItem() {
+function AccountItem(data) {
     const renderPreview = (props) => {
         return (
             <div tabIndex="-1" {...props}>
                 <PopperWrapper>
                     <AccountPreview />
-                </PopperWrapper>
+                </PopperWrapper> 
             </div>
         );
     };
@@ -25,11 +25,7 @@ function AccountItem() {
         <div>
             <Tippy interactive placement="bottom" offset={[-20]} delay={[800, 0]} render={renderPreview}>
                 <div className={cx('account-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/44f96206558a5ac23e32f402358820c8~c5_100x100.jpeg?x-expires=1675652400&amp;x-signature=s0HOkD%2FFVS2DWTqRapXdkvbqC5I%3D"
-                        alt=""
-                    />
+                    <img className={cx('avatar')} src={data.avatar} alt="" />
                     <div className={cx('item-info')}>
                         <p className={cx('nickname')}>
                             <strong>quynguyen</strong>
